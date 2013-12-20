@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devmix.snapshot.friends.FriendsActivity;
 import com.devmix.snapshot.utils.Utils;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -161,7 +160,7 @@ public class MainActivity extends Activity {
 	public void afterViews() {
 
 		Utils.updateLanguage(getApplicationContext(), "en");
-		Utils.printHashKey(getApplicationContext());
+		Utils.printHashKey(getApplicationContext(),"");
 
 		SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
 				.setAppId(applicationId).setNamespace(nameSpace)
@@ -662,9 +661,9 @@ public class MainActivity extends Activity {
 		mButtonFragments.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
+				/*Intent intent = new Intent(MainActivity.this,
 						FriendsActivity.class);
-				startActivity(intent);
+				startActivity(intent);*/
 			}
 		});
 

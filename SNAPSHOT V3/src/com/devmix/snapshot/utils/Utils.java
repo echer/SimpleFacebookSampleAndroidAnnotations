@@ -43,11 +43,11 @@ public class Utils
 	/**
 	 * Print hash key
 	 */
-	public static void printHashKey(Context context)
+	public static void printHashKey(Context context,String packageName)
 	{
 		try
 		{
-			String TAG = "com.devmix.snapshot";
+			String TAG = packageName;
 			PackageInfo info = context.getPackageManager().getPackageInfo(TAG,
 				PackageManager.GET_SIGNATURES);
 			for (Signature signature: info.signatures)

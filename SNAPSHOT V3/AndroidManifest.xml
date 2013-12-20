@@ -18,6 +18,10 @@
         <activity
             android:name=".MainActivity_"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".FacebookLogin_"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
