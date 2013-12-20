@@ -25,5 +25,10 @@
     <string name="fragment_example_">Fragment example >></string>
     <string name="publish_photo">Publish photo</string>
     <string name="get_albums">Get albums</string>
+    
+    <!-- FRAGMENT PROFILE -->
+    <string name="frag_profile_info_title">Informações Pessoais</string>
+    <string name="frag_profile_info_not_found">Sem informação</string>
+    
 
 </resources>

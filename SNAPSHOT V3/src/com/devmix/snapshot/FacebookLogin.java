@@ -1,5 +1,6 @@
 package com.devmix.snapshot;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -20,7 +21,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebook.OnLoginListener;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 
-@Fullscreen
+@Fullscreen 
 @NoTitle
 @EActivity(R.layout.facebook_login)
 public class FacebookLogin extends Activity {
