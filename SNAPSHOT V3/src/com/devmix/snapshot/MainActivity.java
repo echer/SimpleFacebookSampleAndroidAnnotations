@@ -515,7 +515,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onComplete(Profile profile) {
 				hideDialog();
-				String id = profile.getId();
+				String id = String.valueOf(profile.getId());
 				String firstName = profile.getFirstName();
 				String coverUrl = profile.getCover();
 				String pictureUrl = profile.getPicture();
