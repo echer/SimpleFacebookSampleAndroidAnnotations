@@ -1,10 +1,15 @@
 package com.devmix.snapshot;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.DrawableRes;
+import org.androidannotations.annotations.rest.RestService;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -13,62 +18,44 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.devmix.snapshot.adapter.MenuAdapter;
+import com.devmix.snapshot.dao.ConfiguracaoCidadeManager;
+import com.devmix.snapshot.dao.ConfiguracoesManager;
 import com.devmix.snapshot.dao.ProfileManager;
-import com.devmix.snapshot.fragments.FragmentProfile;
-import com.devmix.snapshot.fragments.FragmentProfile_;
-import com.devmix.snapshot.fragments.FragmentSettings;
-import com.devmix.snapshot.fragments.FragmentStore;
-import com.devmix.snapshot.fragments.MenuAdapter;
-import com.devmix.snapshot.utils.Utils;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.Bean;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Fullscreen;
-import com.googlecode.androidannotations.annotations.NoTitle;
-import com.googlecode.androidannotations.annotations.OnActivityResult;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.DrawableRes;
+import com.devmix.snapshot.model.ConfiguracaoCidade;
+import com.devmix.snapshot.model.Configuracoes;
+import com.devmix.snapshot.model.Profile;
+import com.devmix.snapshot.utils.Globals;
+import com.devmix.snapshot.utils.InterfaceUtils;
+import com.devmix.snapshot.ws.ConfiguracoesWS;
 import com.orasystems.libs.utils.async.AsyncUtils;
 import com.orasystems.libs.utils.async.GenericAsyncTask;
-import com.orasystems.libs.utils.internet.Conexao;
-import com.sromku.simple.fb.Permissions;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.SimpleFacebook.OnProfileRequestListener;
-import com.sromku.simple.fb.SimpleFacebookConfiguration;
-import com.sromku.simple.fb.entities.Profile;
 import com.viewpagerindicator.TabPageIndicator;
 
+import eu.inmite.android.lib.dialogs.ISimpleDialogListener;
 
-@NoTitle
-@Fullscreen
-@EActivity(R.layout.activity_snapshot)
-public class ActivitySnapshot extends SherlockFragmentActivity {
- 
+@EActivity(R.layout.activity_snapshot)   
+public class ActivitySnapshot extends SherlockFragmentActivity implements ISimpleDialogListener{
+   
+	/**  
+	 * DRAWABLE RESOURCES
+	 */
 	@DrawableRes(R.drawable.ic_action_person)
-	public Drawable icActionPerson;
+	public Drawable icActionPerson;    
 	@DrawableRes(R.drawable.ic_store)
-	public Drawable icActionStore;
+	public Drawable icActionStore;  
 	@DrawableRes(R.drawable.ic_home)
 	public Drawable icActionHome;
 	@DrawableRes(R.drawable.ic_settings)
 	public Drawable icSettings;
+	@DrawableRes
+	public Drawable icLauncher;
 	
-	public String language = "en";
-	public String packageName = "com.devmix.facebook.login";
-	public String applicationId = "207173972801162";
-	public String nameSapce = "devmixsnapshot";
-	public Permissions[] permissions = new Permissions[] {
-	// Permissions.USER_PHOTOS,
-	Permissions.EMAIL // ,
-	};
+	
 	
 	@ViewById
 	public TabPageIndicator tabs;
@@ -77,7 +64,6 @@ public class ActivitySnapshot extends SherlockFragmentActivity {
 	private MenuAdapter adapter;
 	private int currentColor = 0xFF666666;
 	private Drawable oldBackground = null;
-	private final int FACEBOOK_LOGIN_REQUEST_CODE = 123;
 	
 	/**
 	 * ASYNCTASK
@@ -85,115 +71,54 @@ public class ActivitySnapshot extends SherlockFragmentActivity {
 	@Bean(AsyncUtils.class)
 	public GenericAsyncTask asyncTask;
 	
+	
 	private final Handler handler = new Handler();
-	private Profile profile;
 	
 	/**
 	 * DAO
 	 */
 	@Bean
 	public ProfileManager profileManager;
+	@Bean
+	public ConfiguracoesManager configuracoesManager;
+	@Bean
+	public ConfiguracaoCidadeManager configuracaoCidadeManager;
 	
 	/**
-	 * FRAGMENTS
+	 * REST SERVICE
 	 */
-	public FragmentProfile fragmentProfile;
-	public FragmentSettings fragmentSettings;
-	public FragmentStore fragmentStore;
+	@RestService
+	public ConfiguracoesWS configuracoesWS;
 	
-	private SimpleFacebook mSimpleFacebook;
+	/**
+	 * INTERFACE UTILS
+	 */
+	@Bean
+	public InterfaceUtils interfaceUtils;
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mSimpleFacebook.onActivityResult(this, requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
+	private Profile profile;
+	private Configuracoes configuracoes;
+	
+	@AfterInject
+	public void afterInject(){
+		setTheme(R.style.DialogStyleLight);
+		configuracoesWS.setRootUrl(Globals.rootUrlConfiguracoesWS);
 	}
-	
-	
-	@OnActivityResult(FACEBOOK_LOGIN_REQUEST_CODE)
-	public void onResult(int resultCode,Intent data){
-		switch (resultCode) {
-		case FacebookLogin.RESULT_LOGIN_BACK_PRESSED:
-			finish();
-			break;
-		case FacebookLogin.RESULT_LOGIN_FAIL:
-			
-			break;
-		case FacebookLogin.RESULT_LOGIN_SUCESS:
-			
-			mSimpleFacebook.getProfile(new OnProfileRequestListener() {
-				@Override
-				public void onFail(String reason) {
-					asyncTask.hideProgressBar();
-				}
-				
-				@Override
-				public void onException(Throwable throwable) {
-					asyncTask.hideProgressBar();
-				}
-				
-				@Override
-				public void onThinking() {
-				}
-				
-				@Override
-				public void onComplete(Profile profile) {
-					asyncTask.hideProgressBar();
-					
-					if(profile != null){
-						//envia profile para webservice
-						
-						//salva profile
-						try {
-							if(profileManager.save(profile)!= -1){
-								//sucesso
-								
-							}else{
-								//erro ao salvar
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					startActivity(new Intent(ActivitySnapshot.this, ActivitySnapshot_.class));
-					finish();
-				}
-			});
 
-			break;
-
-		default:
-			break;
-		}
-	}
-	
 	@AfterViews
-	public void afterViews(){
+	public void afterViews() {
 		
-		Utils.updateLanguage(getApplicationContext(), language);
-		Utils.printHashKey(getApplicationContext(), packageName);
-
-		SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-				.setAppId(applicationId).setNamespace(nameSapce)
-				.setPermissions(permissions).build();
-		SimpleFacebook.setConfiguration(configuration);
-
-		mSimpleFacebook = SimpleFacebook.getInstance(this);
-		
-		try {
+		profile = null;
+		try { 
 			profile = profileManager.loadFirst();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
+			finish();
 		}
 		
-		if(profile == null){
-			if(Conexao.conectadoOuConectando(this)){
-				startActivityForResult(new Intent(this, FacebookLogin_.class), FACEBOOK_LOGIN_REQUEST_CODE);
-			}else{
-				//SEM CONEXAO COM A INTERNET
-				finish();
-			}
-		}
+		try{
+        	configuracoes = configuracoesManager.loadFirst();
+        }catch(Exception ignored){}
+		
 		
 		//This is a workaround for http://b.android.com/15340 from http://stackoverflow.com/a/5852198/132047
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -205,26 +130,11 @@ public class ActivitySnapshot extends SherlockFragmentActivity {
             bgSplit.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
             getSupportActionBar().setSplitBackgroundDrawable(bgSplit);
         }
-        
-        /*adapter = new MyPagerAdapter(getSupportFragmentManager());
-
-		pager.setAdapter(adapter);
-
-		final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-				.getDisplayMetrics());
-		pager.setPageMargin(pageMargin);
-
-		tabs.setViewPager(pager);*/
 		
-		adapter = new MenuAdapter(getSupportFragmentManager());
-		fragmentProfile = FragmentProfile_.builder().perfil(profile).build();
-		List<Fragment> fragments = new ArrayList<Fragment>();
-		fragments.add(fragmentProfile);
-		fragments.add(new Fragment());
-		fragments.add(new Fragment());
-		fragments.add(new Fragment());
+		adapter = new MenuAdapter(getSupportFragmentManager()); 
+		adapter.setConfiguracoes(configuracoes);
+		adapter.setProfile(profile);
 		
-		adapter.setmFragments(fragments);
 		pager.setAdapter(adapter);
 		final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
 				.getDisplayMetrics());
@@ -233,35 +143,7 @@ public class ActivitySnapshot extends SherlockFragmentActivity {
 
 		changeColor(currentColor);
 	}
-	
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add("Save")
-        .setIcon(R.drawable.ic_action_person)
-        .setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				return false;
-			}
-		})
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add("Search")
-            .setIcon(R.drawable.ic_search)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        
-        menu.add("Search")
-        .setIcon(R.drawable.ic_search)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add("Refresh")
-            .setIcon(R.drawable.ic_refresh)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-	
 	@SuppressLint("NewApi")
 	private void changeColor(int newColor) {
 		if(newColor < 0)return;
@@ -328,4 +210,46 @@ public class ActivitySnapshot extends SherlockFragmentActivity {
 			handler.removeCallbacks(what);
 		}
 	};
+
+	@Override
+	public void onPositiveButtonClicked(int requestCode) {
+		switch (requestCode) {
+		case 3:
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					//deleteCidade(fragmentSettings.getCidadeExcluir());
+				}
+			}, 1000);
+			break;
+		default:
+			break;
+		}
+		
+	}
+	
+	@Background
+	public void deleteCidade(ConfiguracaoCidade cidadeExcluir) {
+		asyncTask.showProgressBar(this, R.string.acvty_snapshot_progress_title, R.string.acvty_snapshot_excluindo_cidade, 100, icLauncher, false, true, false);
+		try{
+			if(configuracoesWS.deleteCidade(cidadeExcluir.getCidade(), profile.getId()) 
+					&& configuracaoCidadeManager.delete(cidadeExcluir) != -1){
+				interfaceUtils.exibeToast(R.string.acvty_snapshot_cidade_excluida);
+				//fragmentSettings.reloadCidades();
+			}else{
+				interfaceUtils.exibeToast(R.string.acvty_snapshot_cidade_excluir_erro);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			interfaceUtils.exibeToast(R.string.acvty_snapshot_cidade_excluir_erro);
+		}finally{
+			asyncTask.hideProgressBar();
+		}
+	}
+
+	@Override
+	public void onNegativeButtonClicked(int requestCode) {
+		
+	}
+
 }

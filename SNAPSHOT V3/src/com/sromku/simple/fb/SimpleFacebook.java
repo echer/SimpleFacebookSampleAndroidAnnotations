@@ -32,7 +32,7 @@ import com.facebook.widget.WebDialog;
 import com.sromku.simple.fb.entities.Album;
 import com.sromku.simple.fb.entities.Feed;
 import com.sromku.simple.fb.entities.Photo;
-import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.entities.ProfileFB;
 import com.sromku.simple.fb.entities.Story;
 import com.sromku.simple.fb.entities.Video;
 import com.sromku.simple.fb.utils.Errors;
@@ -274,7 +274,7 @@ public class SimpleFacebook
 						// callback with 'complete'
 						if (onProfileRequestListener != null)
 						{
-							Profile profile = Profile.create(graphUser);
+							ProfileFB profile = ProfileFB.create(graphUser);
 							onProfileRequestListener.onComplete(profile);
 						}
 					}
@@ -382,10 +382,10 @@ public class SimpleFacebook
 						// callback with 'complete'
 						if (onFriendsRequestListener != null)
 						{
-							List<Profile> friends = new ArrayList<Profile>(graphUsers.size());
+							List<ProfileFB> friends = new ArrayList<ProfileFB>(graphUsers.size());
 							for (GraphUser graphUser: graphUsers)
 							{
-								friends.add(Profile.create(graphUser));
+								friends.add(ProfileFB.create(graphUser));
 							}
 							onFriendsRequestListener.onComplete(friends);
 						}
@@ -2056,7 +2056,7 @@ public class SimpleFacebook
 	 */
 	public interface OnProfileRequestListener extends OnActionListener
 	{
-		void onComplete(Profile profile);
+		void onComplete(ProfileFB profile);
 	}
 
 	/**
@@ -2067,7 +2067,7 @@ public class SimpleFacebook
 	 */
 	public interface OnFriendsRequestListener extends OnActionListener
 	{
-		void onComplete(List<Profile> friends);
+		void onComplete(List<ProfileFB> friends);
 	}
 
 	/**

@@ -16,12 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devmix.snapshot.utils.Utils;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EActivity;
-import com.googlecode.androidannotations.annotations.Extra;
-import com.googlecode.androidannotations.annotations.Fullscreen;
-import com.googlecode.androidannotations.annotations.NoTitle;
-import com.googlecode.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.NoTitle;
+import org.androidannotations.annotations.ViewById;
 import com.sromku.simple.fb.Permissions;
 import com.sromku.simple.fb.Properties;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -36,7 +36,7 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.sromku.simple.fb.entities.Album;
 import com.sromku.simple.fb.entities.Feed;
 import com.sromku.simple.fb.entities.Photo;
-import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.entities.ProfileFB;
 import com.sromku.simple.fb.utils.Attributes;
 import com.sromku.simple.fb.utils.PictureAttributes;
 import com.sromku.simple.fb.utils.PictureAttributes.PictureType;
@@ -447,7 +447,7 @@ public class MainActivity extends Activity {
 			}
 
 			@Override
-			public void onComplete(Profile profile) {
+			public void onComplete(ProfileFB profile) {
 				hideDialog();
 				Log.i(TAG, "My profile id = " + profile.getId());
 				String name = profile.getName();
@@ -513,7 +513,7 @@ public class MainActivity extends Activity {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onComplete(Profile profile) {
+			public void onComplete(ProfileFB profile) {
 				hideDialog();
 				String id = String.valueOf(profile.getId());
 				String firstName = profile.getFirstName();
@@ -589,7 +589,7 @@ public class MainActivity extends Activity {
 			}
 
 			@Override
-			public void onComplete(List<Profile> friends) {
+			public void onComplete(List<ProfileFB> friends) {
 				hideDialog();
 				Log.i(TAG, "Number of friends = " + friends.size());
 				toast("Number of friends = " + friends.size());
@@ -743,7 +743,7 @@ public class MainActivity extends Activity {
 		}
 
 		@Override
-		public void onComplete(Profile profile) {
+		public void onComplete(ProfileFB profile) {
 		}
 
 	}

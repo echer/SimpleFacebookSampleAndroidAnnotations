@@ -26,9 +26,64 @@
     <string name="publish_photo">Publish photo</string>
     <string name="get_albums">Get albums</string>
     
+    <string name="positive_response">Sim</string>
+    <string name="negative_response">Não</string>
+    
+    <!-- ACTIVITY SNAPSHOT -->
+    <string name="info">Info</string>
+    <string name="not_network">Sem comunicação com a internet, clique aqui para tentar novamente!</string>
+    <string name="acvty_snapshot_not_working">Sem comunicação com o servidor tente novamente mais tarde!</string>
+    <string name="acvty_snapshot_error">Ocorreu um erro ao se comunicar, tente novamente mais tarde!</string>
+    <string name="acvty_snapshot_cadastro_sucess">Cadastro realizado com sucesso</string>
+    <string name="acvty_snapshot_btn_txt_iniciar">Iniciar</string>
+    <string name="acvty_snapshot_dialog_title">Info</string>
+    <string name="acvty_snapshot_progress_title">Aguarde</string>
+    <string name="acvty_snapshot_progress_realizando_cadastro">Realizando cadastro aguarde...</string>
+    <string name="acvty_snapshot_progress_obtendo_info">Obtendo informações</string>
+    <string name="acvty_snapshot_progress_estamos_terminando">Estamos terminando aguarde...</string>
+    <string name="acvty_snapshot_progress_processando_info">Processando informações aguarde...</string>
+    <string name="acvty_snapshot_sem_conexao">Sem conexão com a internet! :/</string>
+    <string name="acvty_snapshot_cidade_excluida">Cidade excluida com sucesso</string>
+    <string name="acvty_snapshot_cidade_excluir_erro">Ocorreu um erro ao excluir Cidade, tente novamente mais tarde.</string>
+    <string name="acvty_snapshot_excluindo_cidade">Excluindo cidade aguarde...</string>
+    
     <!-- FRAGMENT PROFILE -->
     <string name="frag_profile_info_title">Informações Pessoais</string>
     <string name="frag_profile_info_not_found">Sem informação</string>
+    
+    <!-- FRAGMENT SETTINGS -->
+    <string name="frag_settings_info_title">Preferências de Busca</string>
+    <string name="frag_settings_atualizar_cidades">Atualizar Cidades</string>
+    <string name="frag_settings_info_busca">Cidades</string>
+    <string name="frag_settings_nova_cidade">Adicionar Cidade</string>
+    <string name="frag_settings_atualizando_cidades_estados">Atualizando Lista de Cidades/Estados</string>
+    <string name="frag_settings_cidades_estados_sucess">Cidades/Estados atualizados!</string>
+    <string name="frag_settings_cidades_estados_fail">Ocorreu um erro se comunicar, tente novamente mais tarde.</string>
+    <string name="frag_settings_cidade_delete">Deseja realmente excluir esta cidade?</string>
+    
+    <!-- FRAGMENT FOLLOW -->
+    <string name="frag_follow_carregando_lojas">Carregando lojas aguarde...</string>
+    
+    
+    <!-- DIALOG CIDADE NEW -->
+    <string name="dial_frag_cidade_new_estado">Estado:</string>
+    <string name="dial_frag_cidade_new_cidade">Cidade:</string>
+    <string name="dial_frag_cidade_new_carregando_estados">Carregando estados aguarde...</string>
+    <string name="dial_frag_cidade_new_carregando_cidades">Carregando cidades aguarde...</string>
+    <string name="dial_frag_cidade_new_salvando_cidades">Salvando cidades aguarde...</string>
+    <string name="dial_frag_cidade_new_title">Adicionar Nova Cidade</string>
+    <string name="dial_frag_cidade_new_cidade_salva_sucess">Cidades salvas com sucesso</string>
+    <string name="dial_frag_cidade_new_cidade_salva_erro">Ocorreu um erro ao salvar cidades</string>
+    <string name="dial_frag_cidade_new_sem_cidade">Adicione uma cidade</string>
+    
+    
+    
+    
+    <!-- ACTIONBAR MENU OPTIONS -->
+    <string name="action_save">Salvar</string>
+    
+    
+    
     
 
 </resources>

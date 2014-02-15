@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/lib/com.visualdenim.schooltraq"
+    android:id="@+id/panel_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.etsy.android.grid.util.DynamicHeightImageView
+            android:id="@+id/storeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:gravity="center"
+            android:scaleType="fitCenter" />
+
+        <com.etsy.android.grid.util.DynamicHeightTextView
+            android:id="@+id/txt_line1"
+            android:layout_below="@id/storeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/btn_go"
+            style="@style/ButtonTextSmallWide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_green"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/ic_plus"
+            android:text="Seguir" />
+
+        <com.todddavies.components.progressbar.ProgressWheel
+            android:id="@+id/pw_spinner"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            ProgressWheel:barColor="#0097D6"
+            ProgressWheel:barLength="60dp"
+            ProgressWheel:barWidth="3dp"
+           	android:layout_centerHorizontal="true"
+           	android:layout_centerVertical="true"
+            ProgressWheel:rimColor="#330097D6"
+            ProgressWheel:rimWidth="2dp"
+            ProgressWheel:text="Authenticating..."
+            ProgressWheel:textColor="#222"
+            ProgressWheel:textSize="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+</FrameLayout>

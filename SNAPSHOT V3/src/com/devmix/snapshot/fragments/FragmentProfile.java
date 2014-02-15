@@ -3,23 +3,25 @@ package com.devmix.snapshot.fragments;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragment;
 import com.devmix.snapshot.R;
-import com.googlecode.androidannotations.annotations.AfterViews;
-import com.googlecode.androidannotations.annotations.EFragment;
-import com.googlecode.androidannotations.annotations.FragmentArg;
-import com.googlecode.androidannotations.annotations.ViewById;
-import com.googlecode.androidannotations.annotations.res.StringRes;
-import com.sromku.simple.fb.entities.Profile;
+import com.devmix.snapshot.model.Profile;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 
 @EFragment
-public class FragmentProfile extends Fragment {
+public class FragmentProfile extends SherlockFragment {
 
 	@ViewById
 	public TextView fragProfileEdNome;
@@ -33,13 +35,13 @@ public class FragmentProfile extends Fragment {
 	public String infoNotFound;
 	@FragmentArg
 	public Profile perfil;
-
+	
 	@SuppressLint("SimpleDateFormat")
 	@SuppressWarnings("deprecation")
 	@AfterViews
 	public void afterViews() {
 		
-		if(perfil == null){
+		if(getPerfil() == null){
 			fragProfileEdNome.setHint(infoNotFound);
 
 			fragProfileEdEmail.setHint(infoNotFound);
@@ -50,23 +52,23 @@ public class FragmentProfile extends Fragment {
 		}else{
 			//verifica nome
 			String nome = "";
-			if(perfil.getName() != null){
-				nome += perfil.getName();
+			if(getPerfil().getName() != null){
+				nome += getPerfil().getName();
 			}else{
-				if(perfil.getFirstName() != null)nome += perfil.getFirstName();
-				if(perfil.getMiddleName() != null)nome += " " + perfil.getMiddleName();
-				if(perfil.getLastName() != null)nome += " " + perfil.getLastName();
+				if(getPerfil().getFirstName() != null)nome += getPerfil().getFirstName();
+				if(getPerfil().getMiddleName() != null)nome += " " + getPerfil().getMiddleName();
+				if(getPerfil().getLastName() != null)nome += " " + getPerfil().getLastName();
 			}
 			fragProfileEdNome.setText(nome != null && nome.length() > 0 ? nome : infoNotFound);
 			
 			//verifica email
-			fragProfileEdEmail.setText(perfil.getEmail() != null && perfil.getEmail().length() > 0 ? perfil.getEmail() : infoNotFound);
+			fragProfileEdEmail.setText(getPerfil().getEmail() != null && getPerfil().getEmail().length() > 0 ? getPerfil().getEmail() : infoNotFound);
 			
 			//verifica data nascimento
-			if(perfil.getBirthday() != null && perfil.getBirthday().length() > 0){
+			if(getPerfil().getBirthday() != null && getPerfil().getBirthday().length() > 0){
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-					Date nascimento = format.parse(perfil.getBirthday());
+					Date nascimento = format.parse(getPerfil().getBirthday());
 					Date atual = new Date(System.currentTimeMillis());
 					int idade = 0;
 					if(atual.getDay() >= nascimento.getDay() && atual.getMonth() >= nascimento.getMonth()){
@@ -88,9 +90,9 @@ public class FragmentProfile extends Fragment {
 			}
 			
 			//verifica sexo
-			if(perfil.getGender() != null && perfil.getGender().length() > 0){
-				if("male".equals(perfil.getGender()))fragProfileEdSexo.setText("Homem");
-				if("female".equals(perfil.getGender()))fragProfileEdSexo.setText("Mulher");
+			if(getPerfil().getGender() != null && getPerfil().getGender().length() > 0){
+				if("male".equals(getPerfil().getGender()))fragProfileEdSexo.setText("Homem");
+				if("female".equals(getPerfil().getGender()))fragProfileEdSexo.setText("Mulher");
 			}else{
 				fragProfileEdSexo.setText(infoNotFound);
 			}
@@ -102,5 +104,13 @@ public class FragmentProfile extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_profile, container, false);
+	}
+
+	public Profile getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(Profile perfil) {
+		this.perfil = perfil;
 	}
 }

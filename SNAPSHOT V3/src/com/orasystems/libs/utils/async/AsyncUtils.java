@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 
-import com.googlecode.androidannotations.annotations.EBean;
-import com.googlecode.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.UiThread;
 
 @EBean
 public class AsyncUtils implements GenericAsyncTask{
@@ -45,6 +45,20 @@ public class AsyncUtils implements GenericAsyncTask{
 	public void atualizaProgressDialog(GenericAsyncTask asyncTask,String message,int progress){
 		if(message != null)asyncTask.getProgressDialog().setMessage(message);
 		if(progress > 0)asyncTask.getProgressDialog().setProgress(progress);
+	}
+	@Override
+	@UiThread
+	public void showProgressBar(Activity activity, int titleResId,
+			int stringResId, int max, Drawable icon, boolean setCancelable,
+			boolean setIndeterminate, boolean progressHorizontal) {
+		progressDialog = LightProgressDialog.create(activity,progressHorizontal);
+        progressDialog.setCancelable(setCancelable);
+        progressDialog.setIndeterminate(setIndeterminate);
+        progressDialog.setMax(max);
+        progressDialog.setTitle(activity.getResources().getString(titleResId));
+        progressDialog.setIcon(icon);
+        progressDialog.setMessage(activity.getResources().getString(stringResId));
+        progressDialog.show();
 	}
 
 
